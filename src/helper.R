@@ -1,4 +1,53 @@
 
+
+infer_infections <- function(survey_dat, param_table, iterations, popt, opt_freq, thin, burnin, adaptive_period, mu_pars, tp_pars, m_pars, control_pars, end, n){
+    final <- survey_dat[1:n,]
+    results <- matrix(ncol=3,nrow=n)
+    for(i in 1:n){
+        print(paste("Inference on individual number ", i, sep=""))
+        tmp <- survey_dat[i,]
+        dat <- matrix(nrow=2,ncol=4)
+        dat[1,] <- unname(as.numeric(tmp[1:4]))
+        dat[2,] <- unname(as.numeric(tmp[5:8]))
+        startpars <- as.integer(runif(3, 0, end))
+        times <- dat[,1]
+        dat2 <- dat[,c(2,3,4)]
+        print("Data: ")
+        print(dat)
+        print("Start parameters: ")
+        print(startpars)
+        file <- run_MCMC(
+            startpars,
+            dat2,
+            times,
+            param_table,
+            iterations,
+            popt,
+            opt_freq,
+            thin,
+            burnin,
+            adaptive_period,
+            paste("individual_",i,sep=""),
+            500,
+            mu_pars,
+            tp_pars,
+            m_pars,
+            control_pars
+            )
+        chain <- as.mcmc(read.csv(file))
+        inference <- get_infection_ratios(chain, thin, burnin, adaptive_period, times[2])
+        print("Ratios of infection times:")
+        print(inference)
+        results[i,] <- inference
+    }
+    results <- as.data.frame(results)
+    colnames(results) <- c("H3N2 Inference", "H5N1 Inference", "H1N1 Inference")
+    return(cbind(final,results))
+}
+
+
+
+
 generate_prediction_intervals <- function(chain,t,runs=10000,level=0.95,smoothing=0){
     print(t)
     upper_level <- level + ((1-level)/2)
