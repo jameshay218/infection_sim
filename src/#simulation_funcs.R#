@@ -239,8 +239,8 @@ fluscape_simulation <- function(
     final <- overall_simulation(n, v1_strains, incidenceVectors, measurement_times, list(mu_pars,tp_pars,m_pars,STOCHASTIC), y0s, start, end, c(FALSE,addNoise), noiseParams, FALSE, TRUE, multiple_strains, add_noise)
     
     if(plotSerology){
-          for(i in 1:length(v1_strains)){
-              plot_serology(dat[,c("PART_SAMPLE_TIME.V1",v1_strains[i],"PART_SAMPLE_TIME.V2",v2_strains[i])],fluscape_strains[i])
+        for(i in 1:length(v1_strains)){
+            plot_serology(dat[,c("PART_SAMPLE_TIME.V1",v1_strains[i],"PART_SAMPLE_TIME.V2",v2_strains[i])],fluscape_strains[i])
         }
         for(i in 1:length(v1_strains)){
             name <- paste(v1_strains[i]," sim",sep="")

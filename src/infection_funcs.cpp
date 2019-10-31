@@ -83,16 +83,6 @@ double obs_error(int actual, int obs, double S, double EA){
   return((1.0/(MAX_TITRE-2.0))*(1.0-S-EA));
 }
 
-//[[Rcpp::export]]
-NumericVector vector_sort(NumericVector x){
-  NumericVector y = clone(x);
-  return(y.sort());
-}
-//[[Rcpp::export]]
-IntegerVector vector_order(NumericVector x){
-  NumericVector y = clone(x).sort();
-  return(match(y,x));
-}
 
 //[[Rcpp::export]]
 double toUnitScale(double x, double min, double max){
@@ -290,13 +280,13 @@ string run_MCMC(NumericVector startvalue,
   // Vectors for adaptive steps
   NumericVector tempaccepted(startvalue.length()); // Store total number of accepted proposals for each parameter
   NumericVector tempiter(startvalue.length()); // Store total number of proposals for each parameter
-   NumericVector reset(startvalue.length()); // Vector of zeroes for reset of above vectors
+  NumericVector reset(startvalue.length()); // Vector of zeroes for reset of above vectors
   NumericVector pcur(startvalue.length()); // Vector of acceptance rates for each parameter
 
   /*double tempaccepted = 0;
-  double tempiter = 0;
-  double reset= 0;
-  double pcur = 0;
+    double tempiter = 0;
+    double reset= 0;
+    double pcur = 0;
   */
 
   NumericVector lower_bounds(param_table.nrow()); // Lower bounds for each parameter
